@@ -4,37 +4,36 @@
   This is intended as an enhancement for prvHelpCommand() to allow for more compact help constant message with consistent tabbing.
   /FreeRTOS-Plus-CLI/FreeRTOS_CLI.c
 
-  e.g. When running this script, you will get this behaviour
+  e.g. When running this script, you will get this behaviour. (Given tab width of 4)
 
   ```
-  > ./genhelpstr.c
-  write :          test msg 1
-  write  :         test msg 2
-  write   :        test msg 3
-  write    :         test msg 4
-  write     :        test msg 5
-  write      :       test msg 6
-  write       :      test msg 7
-  write        :       test msg 8
-  write         :      test msg 9
-  write          :     test msg 10
-  write           :    test msg 11
-  write            :     test msg 12
-  write             :    test msg 13
-  write              :   test msg 14
-  write               :  test msg 15
-  write                :   test msg 16
-  write                 :  test msg 17
-  write                  : test msg 18
-  write                   : test msg 19
-  write                    : test msg 20
-  write                     :  test msg 21
-  write                      :   test msg 22
-  write                       :  test msg 23
-  write                        :   test msg 24
-  write                         :  test msg 25
-  write                          :   test msg 26
-  write                           :  test msg 27
+    write :                  test msg 1
+    write  :                 test msg 2
+    write   :                test msg 3
+    write    :               test msg 4
+    write     :              test msg 5
+    write      :             test msg 6
+    write       :            test msg 7
+    write        :           test msg 8
+    write         :          test msg 9
+    write          :         test msg 10
+    write           :        test msg 11
+    write            :       test msg 12
+    write             :      test msg 13
+    write              :     test msg 14
+    write               :    test msg 15
+    write                :   test msg 16
+    write                 :  test msg 17
+    write                  : test msg 18
+    write                   : test msg 19
+    write                    : test msg 20
+    write                     :  test msg 21
+    write                      :     test msg 22
+    write                       :    test msg 23
+    write                        :   test msg 24
+    write                         :  test msg 25
+    write                          :     test msg 26
+    write                           :    test msg 27
   ```
 
 */
