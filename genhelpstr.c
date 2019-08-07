@@ -1,4 +1,4 @@
-//usr/bin/clang "$0" && exec ./a.out "$@"
+//usr/bin/clang -DSELFTEST "$0" && exec ./a.out "$@"
 
 /*
   This is intended as an enhancement for prvHelpCommand() to allow for more compact help constant message with consistent tabbing.
@@ -134,7 +134,9 @@ static char* gen_help_str(
   return buffer;
 }
 
-int main(void) {
+#ifdef SELFTEST
+int main(void)
+{
   char buff[1000] = {0};
 
   gen_help_str(
@@ -177,9 +179,9 @@ int main(void) {
 
   return 0;
 }
+#endif //SELFTEST
 
 #if 0 // Use this in /FreeRTOS-Plus-CLI/FreeRTOS_CLI.c
-
 static BaseType_t prvHelpCommand(
   char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString, uint32_t *has_error )
 {
@@ -212,5 +214,4 @@ BaseType_t xReturn;
 
   return xReturn;
 }
-
 #endif
