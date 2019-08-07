@@ -4,36 +4,36 @@
   This is intended as an enhancement for prvHelpCommand() to allow for more compact help constant message with consistent tabbing.
   /FreeRTOS-Plus-CLI/FreeRTOS_CLI.c
 
-  e.g. When running this script, you will get this behaviour. (Given tab width of 4)
+  e.g. When running this script, you will get this behaviour. (Given tab width of 8 to match the VT102 terminal behaviour)
 
   ```
-    write :                  test msg 1
-    write  :                 test msg 2
-    write   :                test msg 3
-    write    :               test msg 4
-    write     :              test msg 5
-    write      :             test msg 6
-    write       :            test msg 7
-    write        :           test msg 8
-    write         :          test msg 9
-    write          :         test msg 10
-    write           :        test msg 11
-    write            :       test msg 12
-    write             :      test msg 13
-    write              :     test msg 14
-    write               :    test msg 15
-    write                :   test msg 16
-    write                 :  test msg 17
-    write                  : test msg 18
-    write                   : test msg 19
-    write                    : test msg 20
-    write                     :  test msg 21
-    write                      :     test msg 22
-    write                       :    test msg 23
-    write                        :   test msg 24
-    write                         :  test msg 25
-    write                          :     test msg 26
-    write                           :    test msg 27
+  write :                          test msg 1
+  write  :                         test msg 2
+  write   :                        test msg 3
+  write    :                       test msg 4
+  write     :                      test msg 5
+  write      :                     test msg 6
+  write       :                    test msg 7
+  write        :                   test msg 8
+  write         :                  test msg 9
+  write          :                 test msg 10
+  write           :                test msg 11
+  write            :               test msg 12
+  write             :              test msg 13
+  write              :             test msg 14
+  write               :            test msg 15
+  write                :           test msg 16
+  write                 :          test msg 17
+  write                  :         test msg 18
+  write                   :        test msg 19
+  write                    :       test msg 20
+  write                     :      test msg 21
+  write                      :     test msg 22
+  write                       :    test msg 23
+  write                        :   test msg 24
+  write                         :  test msg 25
+  write                          : test msg 26
+  write                           : test msg 27
   ```
 
 */
@@ -50,12 +50,12 @@ static char* gen_help_str(
     const uint32_t spaces_per_tab
   )
 {
-  const uint32_t margin_char_count = margin_tab_count*spaces_per_tab - spaces_per_tab/2;
   size_t n = buffer_len - 1; // Buffer limit counter
   char *s = buffer; // Outbuff char pointer
   const char *hs_ptr = help_string_ptr;
   uint32_t char_per_line = 0;
   bool command_printed_on_this_line = false;
+  bool margin_aligned_on_this_line = false;
   while (n > 0 && *hs_ptr != '\0')
   {
     char c = *hs_ptr;
@@ -82,16 +82,20 @@ static char* gen_help_str(
       }
     }
 
-    if (':' == c)
+    if ((!margin_aligned_on_this_line)&&(':' == c))
     { /* Tab linear */
-      int tab_n = 1;
+      margin_aligned_on_this_line = true;
+      int tab_n = 0;
       *s++ = *hs_ptr++;
       --n;
+      char_per_line++;
 
       // Tab Calc
-      if (margin_char_count > char_per_line)
+      uint32_t req_tab_n = margin_tab_count;
+      uint32_t curr_tab_n = char_per_line/spaces_per_tab;
+      if (req_tab_n > curr_tab_n)
       {
-        tab_n = (margin_char_count - char_per_line)/spaces_per_tab;
+        tab_n = req_tab_n-curr_tab_n;
       }
 
       // Insert number of tabs required to reach the margin
@@ -108,6 +112,7 @@ static char* gen_help_str(
       --n;
       char_per_line = 0;
       command_printed_on_this_line = false;
+      margin_aligned_on_this_line = false;
     }
     else
     { /* Copy Normally */
@@ -162,12 +167,50 @@ int main(void) {
     "...                        : test msg 24\r\n"
     "...                         : test msg 25\r\n"
     "...                          : test msg 26\r\n"
-    "...                           : test msg 27\r\n",
-    7,
-    4
+    "...                           : test msg 27\r\n"
+    "...            : : test msg 30\r\n",
+    4,
+    8
   );
 
   printf("%s\n", buff);
 
   return 0;
 }
+
+#if 0 // Use this in /FreeRTOS-Plus-CLI/FreeRTOS_CLI.c
+
+static BaseType_t prvHelpCommand(
+  char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString, uint32_t *has_error )
+{
+static const CLI_Definition_List_Item_t * pxCommand = NULL;
+BaseType_t xReturn;
+
+  ( void ) pcCommandString;
+
+  if( pxCommand == NULL )
+  {
+    /* Reset the pxCommand pointer back to the start of the list. */
+    pxCommand = &xRegisteredCommands;
+  }
+
+  /* Return the next command help string, before moving the pointer on to
+  the next command in the list. */
+  gen_help_str(pcWriteBuffer, xWriteBufferLen, pxCommand->pxCommandLineDefinition->pcCommand, pxCommand->pxCommandLineDefinition->pcHelpString, 4, 8);
+  pxCommand = pxCommand->pxNext;
+
+  if( pxCommand == NULL )
+  {
+    /* There are no more commands in the list, so there will be no more
+    strings to return after this one and pdFALSE should be returned. */
+    xReturn = pdFALSE;
+  }
+  else
+  {
+    xReturn = pdTRUE;
+  }
+
+  return xReturn;
+}
+
+#endif
