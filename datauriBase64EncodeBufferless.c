@@ -1,13 +1,11 @@
 //usr/bin/clang -DDEMO "$0" && exec ./a.out "$@"
 
 /*
-
   Based on wikibook's implementation, but modified to write directly to uart
   via a putchar function.
   https://en.wikibooks.org/wiki/Algorithm_Implementation/Miscellaneous/Base64#C
 
   This make it useful for dumping data out of an embedded system.
-
 */
 
 
@@ -128,8 +126,9 @@ void datauriBase64EncodeBufferless(int (*putchar_fcptr)(int), const char* type_s
 int main(void)
 {
   char str[] = "test";
-  datauriBase64EncodeBufferless(putchar, "text/plain;charset=utf-8;", str, strlen(str));
-  strl
+
+  datauriBase64EncodeBufferless(putchar, "text/plain;charset=utf-8", str, strlen(str));
+
   return 0;
 }
 #endif //DEMO
